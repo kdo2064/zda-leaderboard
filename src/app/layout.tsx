@@ -2,7 +2,7 @@ import type {Metadata} from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Zero Day Arena',
+  title: 'Phantom Flags 2.0',
   description: 'Join the ultimate cybersecurity challenge.',
 };
 

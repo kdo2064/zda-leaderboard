@@ -48,7 +48,7 @@ export function HeroSection() {
         data-animate="title"
         className="opacity-0 translate-y-5 font-headline text-5xl md:text-7xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/70 mb-4"
       >
-        Zero Day Arena
+        Phantom Flags 2.0
       </h1>
       <p
         data-animate="subtitle"
