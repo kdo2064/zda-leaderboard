@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -8,6 +10,8 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
+import React, { useState, useEffect, useCallback } from "react";
+import type { CarouselApi } from "@/components/ui/carousel";
 
 const rules = [
   {
@@ -49,6 +53,32 @@ const rules = [
 ];
 
 export default function ArenaPage() {
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+
+  const onSelect = useCallback((api: CarouselApi) => {
+    if (!api) {
+      return
+    }
+    setCurrent(api.selectedScrollSnap())
+  }, [])
+
+  useEffect(() => {
+    if (!api) {
+      return
+    }
+
+    onSelect(api)
+    api.on("reInit", onSelect)
+    api.on("select", onSelect)
+
+    return () => {
+      api?.off("select", onSelect)
+    }
+  }, [api, onSelect])
+
+  const isLastSlide = current === rules.length - 1;
+
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden">
       <main className="flex-grow flex flex-col items-center justify-center p-4">
@@ -60,7 +90,7 @@ export default function ArenaPage() {
                 Follow the rules, or face the consequences.
             </p>
 
-            <Carousel className="w-full max-w-[300px] sm:max-w-[350px]">
+            <Carousel setApi={setApi} className="w-full max-w-[300px] sm:max-w-[350px]">
                 <CarouselContent>
                 {rules.map((item, index) => (
                     <CarouselItem key={index}>
@@ -69,8 +99,8 @@ export default function ArenaPage() {
                         <div className="flex-1 w-full relative">
                             <Image
                                 src={item.meme}
-                                alt={item.rule}
-                                layout="fill"
+                                alt={`Rule ${index + 1}`}
+                                fill
                                 className="rounded-lg object-contain"
                                 data-ai-hint="meme"
                             />
@@ -81,12 +111,12 @@ export default function ArenaPage() {
                 ))}
                 </CarouselContent>
                 <CarouselPrevious className="hidden sm:flex" />
-                <CarouselNext className="hidden sm:flex" />
+                <CarouselNext className="hidden sm/flex" />
             </Carousel>
             <div className="mt-6">
-                <Link href="/" passHref>
+                <Link href={isLastSlide ? "/battle-zone" : "/"} passHref>
                     <Button variant="outline" size="lg" className="rounded-full px-8 py-3 text-base font-semibold">
-                        Back to Home
+                        {isLastSlide ? "Go to Battle Zone" : "Back to Home"}
                     </Button>
                 </Link>
             </div>
