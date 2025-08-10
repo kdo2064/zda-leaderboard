@@ -51,30 +51,31 @@ const rules = [
 export default function ArenaPage() {
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden">
-      <main className="flex-grow flex flex-col items-center justify-center p-4 md:p-8">
+      <main className="flex-grow flex flex-col items-center justify-center p-4">
         <div className="w-full max-w-4xl mx-auto flex flex-col items-center">
-            <h1 className="font-headline text-4xl md:text-6xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/70 mb-4">
+            <h1 className="font-headline text-3xl md:text-5xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/70 mb-2">
                 Arena Rules
             </h1>
-            <p className="max-w-2xl text-lg md:text-xl text-muted-foreground mb-8 text-center">
+            <p className="max-w-2xl text-base md:text-lg text-muted-foreground mb-4 text-center">
                 Follow the rules, or face the consequences.
             </p>
 
-            <Carousel className="w-full max-w-md md:max-w-lg lg:max-w-xl">
+            <Carousel className="w-full max-w-xs sm:max-w-sm md:max-w-md">
                 <CarouselContent>
                 {rules.map((item, index) => (
                     <CarouselItem key={index}>
                     <div className="p-1">
-                        <div className="flex flex-col items-center justify-center p-6 rounded-lg bg-card border border-border aspect-square">
-                        <Image
-                            src={item.meme}
-                            alt={item.rule}
-                            width={400}
-                            height={400}
-                            className="rounded-lg mb-4 object-contain aspect-square flex-1"
-                            data-ai-hint="meme"
-                        />
-                        <p className="text-xl font-semibold text-center text-card-foreground">
+                        <div className="flex flex-col items-center justify-center p-4 rounded-lg bg-card border border-border aspect-square">
+                        <div className="flex-1 w-full relative">
+                            <Image
+                                src={item.meme}
+                                alt={item.rule}
+                                fill
+                                className="rounded-lg object-contain"
+                                data-ai-hint="meme"
+                            />
+                        </div>
+                        <p className="text-base font-semibold text-center text-card-foreground mt-4 h-10">
                             {item.rule}
                         </p>
                         </div>
@@ -85,7 +86,7 @@ export default function ArenaPage() {
                 <CarouselPrevious className="hidden sm:flex" />
                 <CarouselNext className="hidden sm:flex" />
             </Carousel>
-            <div className="mt-8">
+            <div className="mt-6">
                 <Link href="/" passHref>
                     <Button variant="outline" size="lg" className="rounded-full px-8 py-3 text-base font-semibold">
                         Back to Home
@@ -94,7 +95,7 @@ export default function ArenaPage() {
             </div>
         </div>
       </main>
-      <footer className="text-center py-6 text-muted-foreground text-sm shrink-0">
+      <footer className="text-center py-4 text-muted-foreground text-xs shrink-0">
         <p>&copy; {new Date().getFullYear()} Zero Day Arena. All Rights Reserved.</p>
       </footer>
     </div>
