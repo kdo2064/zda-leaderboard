@@ -12,39 +12,39 @@ import { Button } from "@/components/ui/button";
 const rules = [
   {
     rule: "Rule 1: No hacking the scoreboard.",
-    meme: "/memes/meme-1.jpg",
+    meme: "https://placehold.co/400x400.png",
   },
   {
     rule: "Rule 2: Don't even think about it.",
-    meme: "/memes/meme-2.jpg",
+    meme: "https://placehold.co/400x400.png",
   },
   {
     rule: "Rule 3: Seriously, don't.",
-    meme: "/memes/meme-3.jpg",
+    meme: "https://placehold.co/400x400.png",
   },
   {
     rule: "Rule 4: We will find you.",
-    meme: "/memes/meme-4.jpg",
+    meme: "https://placehold.co/400x400.png",
   },
   {
     rule: "Rule 5: And it won't be pretty.",
-    meme: "/memes/meme-5.jpg",
+    meme: "https://placehold.co/400x400.png",
   },
   {
     rule: "Rule 6: We have a particular set of skills.",
-    meme: "/memes/meme-6.jpg",
+    meme: "https://placehold.co/400x400.png",
   },
   {
     rule: "Rule 7: Skills that make us a nightmare for people like you.",
-    meme: "/memes/meme-7.jpg",
+    meme: "https://placehold.co/400x400.png",
   },
   {
     rule: "Rule 8: If you let the scoreboard go now, that'll be the end of it.",
-    meme: "/memes/meme-8.jpg",
+    meme: "https://placehold.co/400x400.png",
   },
   {
     rule: "Rule 9: Okay, have fun!",
-    meme: "/memes/meme-9.jpg",
+    meme: "https://placehold.co/400x400.png",
   },
 ];
 
@@ -60,7 +60,7 @@ export default function ArenaPage() {
                 Follow the rules, or face the consequences.
             </p>
 
-            <Carousel className="w-full max-w-xs sm:max-w-sm md:max-w-md">
+            <Carousel className="w-full max-w-[300px] sm:max-w-[350px]">
                 <CarouselContent>
                 {rules.map((item, index) => (
                     <CarouselItem key={index}>
@@ -70,12 +70,13 @@ export default function ArenaPage() {
                             <Image
                                 src={item.meme}
                                 alt={item.rule}
-                                fill
+                                width={300}
+                                height={300}
                                 className="rounded-lg object-contain"
                                 data-ai-hint="meme"
                             />
                         </div>
-                        <p className="text-base font-semibold text-center text-card-foreground mt-4 h-10">
+                        <p className="text-sm font-semibold text-center text-card-foreground mt-2 h-10">
                             {item.rule}
                         </p>
                         </div>
