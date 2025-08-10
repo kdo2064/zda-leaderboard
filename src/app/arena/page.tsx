@@ -71,7 +71,7 @@ export default function ArenaPage() {
                             alt={item.rule}
                             width={400}
                             height={400}
-                            className="rounded-lg mb-4 object-contain h-64 w-full"
+                            className="rounded-lg mb-4 object-contain aspect-square flex-1"
                             data-ai-hint="meme"
                         />
                         <p className="text-xl font-semibold text-center text-card-foreground">
