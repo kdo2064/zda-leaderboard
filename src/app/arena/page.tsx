@@ -12,39 +12,39 @@ import { Button } from "@/components/ui/button";
 const rules = [
   {
     rule: "Rule 1: No hacking the scoreboard.",
-    meme: "https://placehold.co/400x400.png",
+    meme: "/meme/meme-1.jpg",
   },
   {
     rule: "Rule 2: Don't even think about it.",
-    meme: "https://placehold.co/400x400.png",
+    meme: "/meme/meme-2.jpg",
   },
   {
     rule: "Rule 3: Seriously, don't.",
-    meme: "https://placehold.co/400x400.png",
+    meme: "/meme/meme-3.jpg",
   },
   {
     rule: "Rule 4: We will find you.",
-    meme: "https://placehold.co/400x400.png",
+    meme: "/meme/meme-4.jpg",
   },
   {
     rule: "Rule 5: And it won't be pretty.",
-    meme: "https://placehold.co/400x400.png",
+    meme: "/meme/meme-5.jpg",
   },
   {
     rule: "Rule 6: We have a particular set of skills.",
-    meme: "https://placehold.co/400x400.png",
+    meme: "/meme/meme-6.jpg",
   },
   {
     rule: "Rule 7: Skills that make us a nightmare for people like you.",
-    meme: "https://placehold.co/400x400.png",
+    meme: "/meme/meme-7.jpg",
   },
   {
     rule: "Rule 8: If you let the scoreboard go now, that'll be the end of it.",
-    meme: "https://placehold.co/400x400.png",
+    meme: "/meme/meme-8.jpg",
   },
   {
     rule: "Rule 9: Okay, have fun!",
-    meme: "https://placehold.co/400x400.png",
+    meme: "/meme/meme-9.jpg",
   },
 ];
 
@@ -70,8 +70,7 @@ export default function ArenaPage() {
                             <Image
                                 src={item.meme}
                                 alt={item.rule}
-                                width={300}
-                                height={300}
+                                layout="fill"
                                 className="rounded-lg object-contain"
                                 data-ai-hint="meme"
                             />
