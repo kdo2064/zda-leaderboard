@@ -42,7 +42,7 @@ export function HeroSection() {
         className="opacity-0 translate-y-5 mb-6 flex items-center gap-2 bg-primary/10 border border-primary/30 text-primary px-4 py-1 rounded-full text-sm font-semibold"
       >
         <ShieldIcon className="w-4 h-4 text-primary" />
-        <span>Cybertech Conference 2024</span>
+        <span>Secure With Teachies</span>
       </div>
       <h1
         data-animate="title"
