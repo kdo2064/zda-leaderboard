@@ -79,6 +79,8 @@ export default function ArenaPage() {
 
   const isLastSlide = current === rules.length - 1;
 
+  const battleZoneUrl = process.env.NEXT_PUBLIC_REDIRECT_TO_ARENA || "/";
+
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden">
       <main className="flex-grow flex flex-col items-center justify-center p-4">
@@ -114,11 +116,19 @@ export default function ArenaPage() {
                 <CarouselNext className="hidden sm:flex" />
             </Carousel>
             <div className="mt-6">
-                <Link href={isLastSlide ? "/battle-zone" : "/"} passHref>
-                    <Button variant="outline" size="lg" className="rounded-full px-8 py-3 text-base font-semibold">
-                        {isLastSlide ? "Go to Battle Zone" : "Back to Home"}
-                    </Button>
-                </Link>
+                {isLastSlide ? (
+                    <a href={battleZoneUrl} target="_blank" rel="noopener noreferrer">
+                        <Button variant="outline" size="lg" className="rounded-full px-8 py-3 text-base font-semibold">
+                            Go to Battle Zone
+                        </Button>
+                    </a>
+                ) : (
+                    <Link href="/" passHref>
+                        <Button variant="outline" size="lg" className="rounded-full px-8 py-3 text-base font-semibold">
+                            Back to Home
+                        </Button>
+                    </Link>
+                )}
             </div>
         </div>
       </main>
