@@ -76,9 +76,6 @@ export default function ArenaPage() {
                                 data-ai-hint="meme"
                             />
                         </div>
-                        <p className="text-sm font-semibold text-center text-card-foreground mt-2 h-10">
-                            {item.rule}
-                        </p>
                         </div>
                     </div>
                     </CarouselItem>
