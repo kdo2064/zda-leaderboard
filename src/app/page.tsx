@@ -7,7 +7,7 @@ export default function Home() {
         <HeroSection />
       </main>
       <footer className="text-center py-6 text-muted-foreground text-sm">
-        <p>&copy; {new Date().getFullYear()} Phantom Flags 2.0. All Rights Reserved.</p>
+        <p>&copy; {new Date().getFullYear()} Zero Day Arena. All Rights Reserved.</p>
       </footer>
     </div>
   );
