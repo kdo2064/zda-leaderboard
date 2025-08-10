@@ -111,7 +111,7 @@ export default function ArenaPage() {
                 ))}
                 </CarouselContent>
                 <CarouselPrevious className="hidden sm:flex" />
-                <CarouselNext className="hidden sm/flex" />
+                <CarouselNext className="hidden sm:flex" />
             </Carousel>
             <div className="mt-6">
                 <Link href={isLastSlide ? "/battle-zone" : "/"} passHref>
