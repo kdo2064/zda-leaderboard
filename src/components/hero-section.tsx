@@ -4,6 +4,7 @@ import React, { useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { Button } from "@/components/ui/button";
 import { ShieldIcon } from "@/components/icons";
+import Link from 'next/link';
 
 export function HeroSection() {
   const component = useRef<HTMLDivElement>(null);
@@ -57,14 +58,16 @@ export function HeroSection() {
         Where elite hackers and security professionals compete. Sharpen your skills, exploit vulnerabilities, and capture the flag in the ultimate cybersecurity challenge.
       </p>
       <div className="flex flex-col sm:flex-row gap-4">
-        <Button
-          data-animate="button"
-          size="lg"
-          className="opacity-0 translate-y-5 rounded-full px-8 py-3 text-base font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-transform hover:scale-105"
-          aria-label="Join The Arena"
-        >
-          Join The Arena
-        </Button>
+        <Link href="/arena" passHref>
+            <Button
+              data-animate="button"
+              size="lg"
+              className="opacity-0 translate-y-5 rounded-full px-8 py-3 text-base font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-transform hover:scale-105"
+              aria-label="Join The Arena"
+            >
+              Join The Arena
+            </Button>
+        </Link>
         <Button
           data-animate="button"
           size="lg"
