@@ -36,7 +36,7 @@ export function HeroSection() {
   }, []);
 
   return (
-    <section ref={component} className="flex flex-col items-center justify-center text-center px-4 py-20">
+    <section ref={component} className="flex flex-col items-center justify-center text-center px-4 h-full">
       <div
         data-animate="badge"
         className="opacity-0 translate-y-5 mb-6 flex items-center gap-2 bg-primary/10 border border-primary/30 text-primary px-4 py-1 rounded-full text-sm font-semibold"
