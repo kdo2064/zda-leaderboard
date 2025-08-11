@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
@@ -35,92 +36,30 @@ export function Leaderboard() {
         ...team,
         points: team.points + Math.floor(Math.random() * 251) - 50,
       }));
-      setTeams(newTeams);
+      const sortedTeams = [...newTeams].sort((a, b) => b.points - a.points);
+      setTeams(sortedTeams.map((t, i) => ({ ...t, rank: i + 1 })));
     }, 2000);
 
     return () => clearInterval(interval);
   }, [teams]);
 
   useLayoutEffect(() => {
-    if (animationTimeout.current) {
-        clearTimeout(animationTimeout.current);
-    }
-    const sortedTeams = [...teams].sort((a, b) => b.points - a.points);
-    const hasChanged = JSON.stringify(teams.map(t => t.name)) !== JSON.stringify(sortedTeams.map(t => t.name));
-
-    if (!hasChanged) {
-        setTeams(sortedTeams.map((t, i) => ({ ...t, rank: i + 1 })));
-        return;
-    }
-
     const teamElements = list.current?.children;
-    if (!teamElements) return;
+    if (!teamElements || !component.current) return;
 
-    const state = Flip.getState(Array.from(teamElements));
-    
-    let currentTeams = [...teams];
+    let ctx = gsap.context(() => {
+      const state = Flip.getState(Array.from(teamElements));
+      
+      Flip.from(state, {
+          duration: 0.7,
+          ease: "power2.inOut",
+          stagger: 0.05,
+          absolute: true,
+      });
 
-    function animateRankChange(fromIndex: number, toIndex: number, callback: () => void) {
-        if (fromIndex === toIndex) {
-            callback();
-            return;
-        }
+    }, component);
 
-        const step = fromIndex < toIndex ? 1 : -1;
-        let currentIndex = fromIndex;
-
-        function moveOneStep() {
-            if (currentIndex === toIndex) {
-                callback();
-                return;
-            }
-
-            const nextIndex = currentIndex + step;
-            const tempTeams = [...currentTeams];
-            const movingTeam = tempTeams.splice(currentIndex, 1)[0];
-            tempTeams.splice(nextIndex, 0, movingTeam);
-            
-            setTeams(tempTeams.map((t, i) => ({ ...t, rank: i + 1 })));
-            currentTeams = tempTeams;
-            currentIndex = nextIndex;
-            
-            animationTimeout.current = setTimeout(moveOneStep, 1000);
-        }
-        moveOneStep();
-    }
-
-    const changes = sortedTeams.map((sortedTeam, newIndex) => {
-        const oldIndex = teams.findIndex(t => t.name === sortedTeam.name);
-        return { name: sortedTeam.name, from: oldIndex, to: newIndex };
-    }).filter(c => c.from !== c.to);
-
-    let animationIndex = 0;
-    function processNextAnimation() {
-        if (animationIndex >= changes.length) {
-            setTeams(sortedTeams.map((t, i) => ({ ...t, rank: i + 1 })));
-
-            Flip.from(state, {
-                duration: 0.7,
-                ease: "power2.inOut",
-                stagger: 0.05,
-                absolute: true,
-            });
-            return;
-        }
-        
-        const change = changes[animationIndex];
-        const currentIndexInAnimation = currentTeams.findIndex(t => t.name === change.name);
-        animateRankChange(currentIndexInAnimation, change.to, () => {
-            animationIndex++;
-            processNextAnimation();
-        });
-    }
-
-    if (changes.length > 0) {
-      processNextAnimation();
-    } else {
-        setTeams(sortedTeams.map((t, i) => ({ ...t, rank: i + 1 })));
-    }
+    return () => ctx.revert();
   }, [teams]);
 
 
