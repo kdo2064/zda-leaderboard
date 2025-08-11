@@ -37,11 +37,14 @@ export function Leaderboard() {
       }));
 
       const sorted = [...newTeams].sort((a, b) => b.points - a.points);
-      const ranked = sorted.map((team, index) => ({
-        ...team,
-        change: team.rank - (index + 1),
-        rank: index + 1,
-      }));
+      const ranked = sorted.map((team, index) => {
+        const oldTeam = teams.find(t => t.name === team.name) || team;
+        return {
+          ...team,
+          change: oldTeam.rank - (index + 1),
+          rank: index + 1,
+        }
+      });
 
       setTeams(ranked);
     }, 2000);
@@ -84,16 +87,16 @@ export function Leaderboard() {
   );
 
   return (
-    <div ref={component} className="flex flex-col h-full w-full bg-background text-foreground font-body p-4 md:p-6 overflow-hidden">
-      <header className="flex flex-col sm:flex-row justify-between items-center mb-4 text-center sm:text-left">
+    <div ref={component} className="flex flex-col h-full w-full bg-background text-foreground font-body p-4 md:p-6 lg:p-8 overflow-hidden">
+      <header className="flex flex-col sm:flex-row justify-between items-center mb-6 md:mb-8 text-center sm:text-left">
         <div>
-            <h1 className="font-headline text-3xl md:text-5xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-primary via-accent to-primary">
+            <h1 className="font-headline text-4xl md:text-5xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-primary via-accent to-primary">
                 Leaderboard
             </h1>
-            <p className="text-muted-foreground mt-1 text-sm md:text-base">Top 10 Teams - Zero Day Arena</p>
+            <p className="text-muted-foreground mt-1 text-base md:text-lg">Top 10 Teams - Zero Day Arena</p>
         </div>
         <Link href="/" passHref>
-            <Button variant="outline" className="mt-4 sm:mt-0">
+            <Button variant="outline" className="mt-4 sm:mt-0 rounded-full px-6">
                 Back to Home
             </Button>
         </Link>
@@ -101,7 +104,7 @@ export function Leaderboard() {
 
       <main className="flex-grow flex flex-col overflow-hidden">
         {/* Top 3 Podium */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 md:mb-8">
           {top3.map((team, index) => (
             <div
               key={team.name}
@@ -130,12 +133,16 @@ export function Leaderboard() {
                 data-flip-id={team.name}
                 className="flex items-center p-3 bg-background/50 rounded-md border border-transparent hover:border-accent/50 transition-colors duration-200"
                 >
-                <div className="w-10 text-center text-lg font-bold font-headline text-muted-foreground">{team.rank}</div>
-                <div className="flex-grow font-semibold ml-4 truncate">{team.name}</div>
-                <div className="w-24 text-right font-bold text-primary">{team.points.toLocaleString()} PTS</div>
-                <div className="w-12 text-right flex justify-end">
-                    {team.change < 0 && <ArrowUp className="w-5 h-5 text-green-500" />}
-                    {team.change > 0 && <ArrowDown className="w-5 h-5 text-red-500" />}
+                <div className="flex items-center w-1/2">
+                    <div className="w-12 text-center text-lg font-bold font-headline text-muted-foreground">{team.rank}</div>
+                    <div className="flex-grow font-semibold ml-4 truncate">{team.name}</div>
+                </div>
+                <div className="flex items-center justify-end w-1/2">
+                    <div className="w-28 text-right font-bold text-primary">{team.points.toLocaleString()} PTS</div>
+                    <div className="w-12 text-right flex justify-end items-center">
+                        {team.change < 0 && <ArrowUp className="w-5 h-5 text-green-500" />}
+                        {team.change > 0 && <ArrowDown className="w-5 h-5 text-red-500" />}
+                    </div>
                 </div>
                 </li>
             ))}
