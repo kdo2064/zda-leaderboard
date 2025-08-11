@@ -28,7 +28,6 @@ export function Leaderboard() {
   const [teams, setTeams] = useState(initialTeams);
   const component = useRef<HTMLDivElement>(null);
   const list = useRef<HTMLUListElement>(null);
-  const animationTimeout = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -65,7 +64,7 @@ export function Leaderboard() {
 
   return (
     <div ref={component} className="flex flex-col h-full w-full bg-background text-foreground font-body p-4 md:p-6 lg:p-8 overflow-hidden">
-      <header className="flex flex-col sm:flex-row justify-between items-center mb-4 text-center sm:text-left shrink-0">
+      <header className="flex flex-col sm:flex-row justify-between items-center mb-4 text-center sm:text-left shrink-0 max-w-4xl w-full mx-auto">
         <div>
             <h1 className="font-headline text-2xl md:text-3xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-primary via-accent to-primary">
                 Leaderboard
@@ -79,7 +78,7 @@ export function Leaderboard() {
         </Link>
       </header>
 
-      <main className="flex-grow flex flex-col overflow-hidden">
+      <main className="flex-grow flex flex-col overflow-hidden max-w-4xl w-full mx-auto">
         <div className="flex-grow bg-card/50 rounded-lg border border-border/50 overflow-y-auto">
             <ul ref={list} className="p-1 space-y-1">
             {teams.map((team) => (
