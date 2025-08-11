@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { Flip } from "gsap/Flip";
-import { Crown, ArrowUp, ArrowDown } from "lucide-react";
+import { Crown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { Button } from "./ui/button";
@@ -11,23 +11,22 @@ import { Button } from "./ui/button";
 gsap.registerPlugin(Flip);
 
 const initialTeams = [
-  { name: "Cyber-Punishers", rank: 1, points: 9850, change: 0 },
-  { name: "Digital-Dragons", rank: 2, points: 9700, change: 0 },
-  { name: "Fatal-Bytes", rank: 3, points: 9600, change: 0 },
-  { name: "Ghost-Protocol", rank: 4, points: 9450, change: 0 },
-  { name: "Shadow-Hackers", rank: 5, points: 9300, change: 0 },
-  { name: "Team-Solaris", rank: 6, points: 9150, change: 0 },
-  { name: "Cyber-Ninjas", rank: 7, points: 9000, change: 0 },
-  { name: "Void-Strikers", rank: 8, points: 8850, change: 0 },
-  { name: "Binary-Bandits", rank: 9, points: 8700, change: 0 },
-  { name: "Code-Crusaders", rank: 10, points: 8550, change: 0 },
+  { name: "Cyber-Punishers", rank: 1, points: 9850 },
+  { name: "Digital-Dragons", rank: 2, points: 9700 },
+  { name: "Fatal-Bytes", rank: 3, points: 9600 },
+  { name: "Ghost-Protocol", rank: 4, points: 9450 },
+  { name: "Shadow-Hackers", rank: 5, points: 9300 },
+  { name: "Team-Solaris", rank: 6, points: 9150 },
+  { name: "Cyber-Ninjas", rank: 7, points: 9000 },
+  { name: "Void-Strikers", rank: 8, points: 8850 },
+  { name: "Binary-Bandits", rank: 9, points: 8700 },
+  { name: "Code-Crusaders", rank: 10, points: 8550 },
 ];
 
 export function Leaderboard() {
   const [teams, setTeams] = useState(initialTeams);
   const component = useRef<HTMLDivElement>(null);
   const list = useRef<HTMLUListElement>(null);
-  const [sortedTeams, setSortedTeams] = useState([...initialTeams]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -38,10 +37,8 @@ export function Leaderboard() {
 
       const sorted = [...newTeams].sort((a, b) => b.points - a.points);
       const ranked = sorted.map((team, index) => {
-        const oldTeam = teams.find(t => t.name === team.name) || team;
         return {
           ...team,
-          change: oldTeam.rank - (index + 1),
           rank: index + 1,
         }
       });
@@ -52,31 +49,6 @@ export function Leaderboard() {
     return () => clearInterval(interval);
   }, [teams]);
 
-  useLayoutEffect(() => {
-    if (!list.current) return;
-    const teamElements = Array.from(list.current.children);
-
-    let ctx = gsap.context(() => {
-      const state = Flip.getState(teamElements);
-
-      const hasChanged = JSON.stringify(teams) !== JSON.stringify(sortedTeams);
-      if(hasChanged) {
-        setSortedTeams(teams);
-
-        Flip.from(state, {
-          duration: 0.7,
-          ease: "power3.inOut",
-          absolute: true,
-          onEnter: (elements) =>
-            gsap.from(elements, { opacity: 0, scale: 0.8, duration: 0.3, delay: 0.1 }),
-          onLeave: (elements) =>
-            gsap.to(elements, { opacity: 0, scale: 0.8, duration: 0.3 }),
-        });
-      }
-    }, component);
-
-    return () => ctx.revert();
-  }, [teams, sortedTeams]);
 
   return (
     <div ref={component} className="flex flex-col h-full w-full bg-background text-foreground font-body p-4 md:p-6 lg:p-8 overflow-hidden">
@@ -97,7 +69,7 @@ export function Leaderboard() {
       <main className="flex-grow flex flex-col overflow-hidden">
         <div className="flex-grow bg-card/50 rounded-lg border border-border/50 overflow-y-auto">
             <ul ref={list} className="p-2 space-y-2">
-            {sortedTeams.map((team) => (
+            {teams.map((team) => (
                 <li
                     key={team.name}
                     data-flip-id={team.name}
