@@ -54,10 +54,10 @@ export function Leaderboard() {
 
   useLayoutEffect(() => {
     if (!list.current) return;
-    const teamElements = list.current.children;
+    const teamElements = Array.from(list.current.children);
 
     let ctx = gsap.context(() => {
-      const state = Flip.getState(Array.from(teamElements));
+      const state = Flip.getState(teamElements);
 
       const hasChanged = JSON.stringify(teams) !== JSON.stringify(sortedTeams);
       if(hasChanged) {
@@ -104,22 +104,25 @@ export function Leaderboard() {
 
       <main className="flex-grow flex flex-col overflow-hidden">
         {/* Top 3 Podium */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 md:mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 md:mb-8 md:items-end">
           {top3.map((team, index) => (
             <div
               key={team.name}
               data-flip-id={team.name}
               className={cn(
-                "p-4 rounded-lg border flex flex-col items-center justify-center transition-all duration-300",
-                team.rank === 1 && "border-primary/50 bg-primary/10 shadow-[0_0_20px_theme(colors.primary/0.3)] md:scale-105",
-                team.rank === 2 && "border-accent/50 bg-accent/10 md:mt-4",
-                team.rank === 3 && "border-accent/50 bg-accent/10 md:mt-4"
+                "p-6 rounded-lg border flex flex-col items-center justify-center transition-all duration-300",
+                team.rank === 1 && "border-primary/50 bg-primary/20 shadow-[0_0_20px_theme(colors.primary/0.3)] md:min-h-[180px]",
+                team.rank === 2 && "border-accent/50 bg-accent/10 md:min-h-[160px]",
+                team.rank === 3 && "border-accent/50 bg-accent/10 md:min-h-[160px]"
               )}
             >
-              {team.rank === 1 && <Crown className="w-8 h-8 text-primary mb-2" />}
-              <div className="text-2xl font-bold font-headline text-primary">{`#${team.rank}`}</div>
-              <div className="text-lg font-semibold mt-1 truncate">{team.name}</div>
-              <div className="text-xl font-bold text-foreground mt-1">{team.points.toLocaleString()} PTS</div>
+              {team.rank === 1 && <Crown className="w-10 h-10 text-primary mb-2" />}
+              <div className={cn(
+                  "text-3xl font-bold font-headline",
+                  team.rank === 1 ? "text-primary" : "text-accent"
+              )}>{`#${team.rank}`}</div>
+              <div className="text-xl font-semibold mt-2 truncate">{team.name}</div>
+              <div className="text-2xl font-bold text-foreground mt-1">{team.points.toLocaleString()} PTS</div>
             </div>
           ))}
         </div>
