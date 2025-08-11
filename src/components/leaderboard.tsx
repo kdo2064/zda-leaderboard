@@ -1,13 +1,14 @@
-
 "use client";
 
-import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
+import React, { useState, useEffect, useLayoutEffect, useRef, useCallback } from "react";
 import { gsap } from "gsap";
 import { Flip } from "gsap/Flip";
 import { Crown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { Button } from "./ui/button";
+import { generateLeaderboardCommentary } from "@/ai/flows/leaderboard-commentary-flow";
+import { Bot } from "lucide-react";
 
 gsap.registerPlugin(Flip);
 
@@ -26,8 +27,23 @@ const initialTeams = [
 
 export function Leaderboard() {
   const [teams, setTeams] = useState(initialTeams);
+  const [commentary, setCommentary] = useState("AI commentator is warming up...");
+  const [isCommentaryLoading, setIsCommentaryLoading] = useState(true);
   const component = useRef<HTMLDivElement>(null);
   const list = useRef<HTMLUListElement>(null);
+
+  const updateCommentary = useCallback(async (currentTeams: typeof initialTeams) => {
+    setIsCommentaryLoading(true);
+    try {
+      const result = await generateLeaderboardCommentary({ teams: currentTeams });
+      setCommentary(result.commentary);
+    } catch (error) {
+      console.error("Error generating commentary:", error);
+      setCommentary("The commentator is currently offline.");
+    } finally {
+      setIsCommentaryLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -36,30 +52,32 @@ export function Leaderboard() {
         points: team.points + Math.floor(Math.random() * 251) - 50,
       }));
       const sortedTeams = [...newTeams].sort((a, b) => b.points - a.points);
-      setTeams(sortedTeams.map((t, i) => ({ ...t, rank: i + 1 })));
-    }, 2000);
+      const rankedTeams = sortedTeams.map((t, i) => ({ ...t, rank: i + 1 }));
+      setTeams(rankedTeams);
+    }, 3000);
 
     return () => clearInterval(interval);
   }, [teams]);
 
+  useEffect(() => {
+    updateCommentary(teams);
+  }, [teams, updateCommentary]);
+
   useLayoutEffect(() => {
-    const teamElements = list.current?.children;
-    if (!teamElements || !component.current) return;
+    if (!list.current) return;
+    const ctx = gsap.context(() => {
+        const teamElements = Array.from(list.current!.children);
+        const state = Flip.getState(teamElements);
 
-    let ctx = gsap.context(() => {
-      const state = Flip.getState(Array.from(teamElements));
-      
-      Flip.from(state, {
-          duration: 0.7,
-          ease: "power2.inOut",
-          stagger: 0.05,
-          absolute: true,
-      });
-
+        Flip.from(state, {
+            duration: 0.7,
+            ease: "power2.inOut",
+            stagger: 0.05,
+            absolute: true,
+        });
     }, component);
-
     return () => ctx.revert();
-  }, [teams]);
+}, [teams]);
 
 
   return (
@@ -84,6 +102,7 @@ export function Leaderboard() {
             {teams.map((team) => (
                 <li
                     key={team.name}
+                    data-rank={team.rank}
                     className={cn(
                         "flex items-center p-2 rounded-md border transition-colors duration-300",
                         team.rank === 1 && "border-primary/50 bg-primary/20 shadow-[0_0_20px_theme(colors.primary/0.3)]",
@@ -107,6 +126,20 @@ export function Leaderboard() {
                 </li>
             ))}
             </ul>
+        </div>
+        <div className="shrink-0 mt-4 p-4 rounded-lg bg-card/50 border border-border/50 flex items-start gap-3">
+          <Bot className="w-6 h-6 text-primary flex-shrink-0 mt-1" />
+          <div className="flex-grow">
+            <h2 className="font-headline text-base font-bold text-primary">AI Commentary</h2>
+            {isCommentaryLoading ? (
+              <div className="space-y-2 mt-1">
+                <div className="h-4 bg-muted/50 rounded w-3/4 animate-pulse"></div>
+                <div className="h-4 bg-muted/50 rounded w-1/2 animate-pulse"></div>
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground mt-1">{commentary}</p>
+            )}
+          </div>
         </div>
       </main>
     </div>
