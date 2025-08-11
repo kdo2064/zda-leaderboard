@@ -78,14 +78,6 @@ export function Leaderboard() {
     return () => ctx.revert();
   }, [teams, sortedTeams]);
 
-  const [top3, otherTeams] = sortedTeams.reduce<[typeof teams, typeof teams]>(
-    (acc, team) => {
-      acc[team.rank <= 3 ? 0 : 1].push(team);
-      return acc;
-    },
-    [[], []]
-  );
-
   return (
     <div ref={component} className="flex flex-col h-full w-full bg-background text-foreground font-body p-4 md:p-6 lg:p-8 overflow-hidden">
       <header className="flex flex-col sm:flex-row justify-between items-center mb-6 md:mb-8 text-center sm:text-left">
@@ -103,50 +95,36 @@ export function Leaderboard() {
       </header>
 
       <main className="flex-grow flex flex-col overflow-hidden">
-        {/* Top 3 Podium */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 md:mb-8 md:items-end">
-          {top3.map((team, index) => (
-            <div
-              key={team.name}
-              data-flip-id={team.name}
-              className={cn(
-                "p-6 rounded-lg border flex flex-col items-center justify-center transition-all duration-300",
-                team.rank === 1 && "border-primary/50 bg-primary/20 shadow-[0_0_20px_theme(colors.primary/0.3)] md:min-h-[180px]",
-                team.rank === 2 && "border-accent/50 bg-accent/10 md:min-h-[160px]",
-                team.rank === 3 && "border-accent/50 bg-accent/10 md:min-h-[160px]"
-              )}
-            >
-              {team.rank === 1 && <Crown className="w-10 h-10 text-primary mb-2" />}
-              <div className={cn(
-                  "text-3xl font-bold font-headline",
-                  team.rank === 1 ? "text-primary" : "text-accent"
-              )}>{`#${team.rank}`}</div>
-              <div className="text-xl font-semibold mt-2 truncate">{team.name}</div>
-              <div className="text-2xl font-bold text-foreground mt-1">{team.points.toLocaleString()} PTS</div>
-            </div>
-          ))}
-        </div>
-
-        {/* Other Teams List */}
         <div className="flex-grow bg-card/50 rounded-lg border border-border/50 overflow-y-auto">
             <ul ref={list} className="p-2 space-y-2">
-            {otherTeams.map((team) => (
+            {sortedTeams.map((team) => (
                 <li
-                key={team.name}
-                data-flip-id={team.name}
-                className="flex items-center p-3 bg-background/50 rounded-md border border-transparent hover:border-accent/50 transition-colors duration-200"
+                    key={team.name}
+                    data-flip-id={team.name}
+                    className={cn(
+                        "flex items-center p-3 rounded-md border transition-all duration-300",
+                        team.rank === 1 && "border-primary/50 bg-primary/20 shadow-[0_0_20px_theme(colors.primary/0.3)]",
+                        team.rank > 1 && team.rank <= 3 && "border-accent/50 bg-accent/10",
+                        team.rank > 3 && "bg-background/50 border-transparent hover:border-accent/50"
+                    )}
                 >
-                <div className="flex items-center w-1/2">
-                    <div className="w-12 text-center text-lg font-bold font-headline text-muted-foreground">{team.rank}</div>
-                    <div className="flex-grow font-semibold ml-4 truncate">{team.name}</div>
-                </div>
-                <div className="flex items-center justify-end w-1/2">
-                    <div className="w-28 text-right font-bold text-primary">{team.points.toLocaleString()} PTS</div>
-                    <div className="w-12 text-right flex justify-end items-center">
-                        {team.change < 0 && <ArrowUp className="w-5 h-5 text-green-500" />}
-                        {team.change > 0 && <ArrowDown className="w-5 h-5 text-red-500" />}
+                    <div className="flex items-center w-1/2">
+                        <div className={cn("w-12 text-center text-lg font-bold font-headline", {
+                            "text-primary": team.rank === 1,
+                            "text-accent": team.rank > 1 && team.rank <= 3,
+                            "text-muted-foreground": team.rank > 3
+                        })}>
+                            {team.rank === 1 ? <Crown className="w-6 h-6 mx-auto text-primary"/> : `#${team.rank}`}
+                        </div>
+                        <div className="flex-grow font-semibold ml-4 truncate">{team.name}</div>
                     </div>
-                </div>
+                    <div className="flex items-center justify-end w-1/2">
+                        <div className="w-28 text-right font-bold text-primary">{team.points.toLocaleString()} PTS</div>
+                        <div className="w-12 text-right flex justify-end items-center">
+                            {team.change < 0 && <ArrowUp className="w-5 h-5 text-green-500" />}
+                            {team.change > 0 && <ArrowDown className="w-5 h-5 text-red-500" />}
+                        </div>
+                    </div>
                 </li>
             ))}
             </ul>
