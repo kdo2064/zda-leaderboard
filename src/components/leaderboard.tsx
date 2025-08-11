@@ -8,6 +8,8 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { Button } from "./ui/button";
 
+gsap.registerPlugin(Flip);
+
 const initialTeams = [
   { name: "Cyber-Punishers", rank: 1, points: 9850, change: 0, country: "KR" },
   { name: "Digital-Dragons", rank: 2, points: 9700, change: 0, country: "JP" },
@@ -41,8 +43,6 @@ export function Leaderboard() {
   const [sortedTeams, setSortedTeams] = useState([...initialTeams]);
 
   useEffect(() => {
-    gsap.registerPlugin(Flip);
-
     const interval = setInterval(() => {
       const newTeams = teams.map((team) => ({
         ...team,
