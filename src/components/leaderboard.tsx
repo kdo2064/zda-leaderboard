@@ -120,10 +120,6 @@ export function Leaderboard() {
                     </div>
                     <div className="flex items-center justify-end w-1/2">
                         <div className="w-28 text-right font-bold text-primary">{team.points.toLocaleString()} PTS</div>
-                        <div className="w-12 text-right flex justify-end items-center">
-                            {team.change < 0 && <ArrowUp className="w-5 h-5 text-green-500" />}
-                            {team.change > 0 && <ArrowDown className="w-5 h-5 text-red-500" />}
-                        </div>
                     </div>
                 </li>
             ))}
