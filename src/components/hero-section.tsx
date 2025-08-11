@@ -68,15 +68,17 @@ export function HeroSection() {
               Join The Arena
             </Button>
         </Link>
-        <Button
-          data-animate="button"
-          size="lg"
-          variant="outline"
-          className="opacity-0 translate-y-5 rounded-full px-8 py-3 text-base font-semibold border-accent text-accent hover:bg-accent/10 hover:text-accent transition-transform hover:scale-105"
-          aria-label="View Leaderboard"
-        >
-          Leaderboard
-        </Button>
+        <Link href="/leaderboard" passHref>
+            <Button
+            data-animate="button"
+            size="lg"
+            variant="outline"
+            className="opacity-0 translate-y-5 rounded-full px-8 py-3 text-base font-semibold border-accent text-accent hover:bg-accent/10 hover:text-accent transition-transform hover:scale-105"
+            aria-label="View Leaderboard"
+            >
+            Leaderboard
+            </Button>
+        </Link>
       </div>
     </section>
   );
