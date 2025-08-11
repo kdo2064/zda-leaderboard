@@ -11,30 +11,17 @@ import { Button } from "./ui/button";
 gsap.registerPlugin(Flip);
 
 const initialTeams = [
-  { name: "Cyber-Punishers", rank: 1, points: 9850, change: 0, country: "KR" },
-  { name: "Digital-Dragons", rank: 2, points: 9700, change: 0, country: "JP" },
-  { name: "Fatal-Bytes", rank: 3, points: 9600, change: 0, country: "CN" },
-  { name: "Ghost-Protocol", rank: 4, points: 9450, change: 0, country: "US" },
-  { name: "Shadow-Hackers", rank: 5, points: 9300, change: 0, country: "RU" },
-  { name: "Team-Solaris", rank: 6, points: 9150, change: 0, country: "DE" },
-  { name: "Cyber-Ninjas", rank: 7, points: 9000, change: 0, country: "GB" },
-  { name: "Void-Strikers", rank: 8, points: 8850, change: 0, country: "FR" },
-  { name: "Binary-Bandits", rank: 9, points: 8700, change: 0, country: "IN" },
-  { name: "Code-Crusaders", rank: 10, points: 8550, change: 0, country: "BR" },
+  { name: "Cyber-Punishers", rank: 1, points: 9850, change: 0 },
+  { name: "Digital-Dragons", rank: 2, points: 9700, change: 0 },
+  { name: "Fatal-Bytes", rank: 3, points: 9600, change: 0 },
+  { name: "Ghost-Protocol", rank: 4, points: 9450, change: 0 },
+  { name: "Shadow-Hackers", rank: 5, points: 9300, change: 0 },
+  { name: "Team-Solaris", rank: 6, points: 9150, change: 0 },
+  { name: "Cyber-Ninjas", rank: 7, points: 9000, change: 0 },
+  { name: "Void-Strikers", rank: 8, points: 8850, change: 0 },
+  { name: "Binary-Bandits", rank: 9, points: 8700, change: 0 },
+  { name: "Code-Crusaders", rank: 10, points: 8550, change: 0 },
 ];
-
-const countryFlags: { [key: string]: string } = {
-  KR: "🇰🇷",
-  JP: "🇯🇵",
-  CN: "🇨🇳",
-  US: "🇺🇸",
-  RU: "🇷🇺",
-  DE: "🇩🇪",
-  GB: "🇬🇧",
-  FR: "🇫🇷",
-  IN: "🇮🇳",
-  BR: "🇧🇷",
-};
 
 export function Leaderboard() {
   const [teams, setTeams] = useState(initialTeams);
@@ -128,7 +115,7 @@ export function Leaderboard() {
             >
               {team.rank === 1 && <Crown className="w-8 h-8 text-primary mb-2" />}
               <div className="text-2xl font-bold font-headline text-primary">{`#${team.rank}`}</div>
-              <div className="text-lg font-semibold mt-1 truncate">{countryFlags[team.country]} {team.name}</div>
+              <div className="text-lg font-semibold mt-1 truncate">{team.name}</div>
               <div className="text-xl font-bold text-foreground mt-1">{team.points.toLocaleString()} PTS</div>
             </div>
           ))}
@@ -144,7 +131,7 @@ export function Leaderboard() {
                 className="flex items-center p-3 bg-background/50 rounded-md border border-transparent hover:border-accent/50 transition-colors duration-200"
                 >
                 <div className="w-10 text-center text-lg font-bold font-headline text-muted-foreground">{team.rank}</div>
-                <div className="flex-grow font-semibold ml-4 truncate">{countryFlags[team.country]} {team.name}</div>
+                <div className="flex-grow font-semibold ml-4 truncate">{team.name}</div>
                 <div className="w-24 text-right font-bold text-primary">{team.points.toLocaleString()} PTS</div>
                 <div className="w-12 text-right flex justify-end">
                     {team.change < 0 && <ArrowUp className="w-5 h-5 text-green-500" />}
