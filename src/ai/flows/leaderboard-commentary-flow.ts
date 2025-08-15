@@ -3,28 +3,10 @@
  * @fileOverview A leaderboard commentary AI agent.
  *
  * - generateLeaderboardCommentary - A function that handles the commentary generation.
- * - LeaderboardCommentaryInput - The input type for the commentary generation.
- * - LeaderboardCommentaryOutput - The return type for the commentary generation.
  */
 
 import { ai } from '@/ai/genkit';
-import { z } from 'zod';
-
-const TeamSchema = z.object({
-  name: z.string(),
-  rank: z.number(),
-  points: z.number(),
-});
-
-export const LeaderboardCommentaryInputSchema = z.object({
-  teams: z.array(TeamSchema),
-});
-export type LeaderboardCommentaryInput = z.infer<typeof LeaderboardCommentaryInputSchema>;
-
-export const LeaderboardCommentaryOutputSchema = z.object({
-  commentary: z.string().describe('The generated commentary for the leaderboard.'),
-});
-export type LeaderboardCommentaryOutput = z.infer<typeof LeaderboardCommentaryOutputSchema>;
+import { LeaderboardCommentaryInputSchema, LeaderboardCommentaryOutputSchema, type LeaderboardCommentaryInput, type LeaderboardCommentaryOutput } from '@/ai/schemas/leaderboard-commentary';
 
 export async function generateLeaderboardCommentary(input: LeaderboardCommentaryInput): Promise<LeaderboardCommentaryOutput> {
   return leaderboardCommentaryFlow(input);
