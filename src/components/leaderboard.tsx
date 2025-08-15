@@ -56,7 +56,7 @@ export function Leaderboard() {
 
   useEffect(() => {
     fetchLeaderboard();
-    const interval = setInterval(fetchLeaderboard, 5000); // Fetch every 5 seconds
+    const interval = setInterval(fetchLeaderboard, 30000); // Fetch every 30 seconds
 
     return () => clearInterval(interval);
   }, [fetchLeaderboard]);
