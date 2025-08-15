@@ -15,7 +15,7 @@ gsap.registerPlugin(Flip);
 
 type Team = LeaderboardCommentaryInput['teams'][number];
 
-const LEADERBOARD_API_URL = "https://pfswt.zerodayarena.com/api/leaderboard";
+const LEADERBOARD_API_URL = "/api/leaderboard";
 
 
 export function Leaderboard() {
