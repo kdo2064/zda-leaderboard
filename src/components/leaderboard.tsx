@@ -7,8 +7,6 @@ import { Crown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { generateLeaderboardCommentary } from "@/ai/flows/leaderboard-commentary-flow";
-import { Bot } from "lucide-react";
 import type { LeaderboardCommentaryInput } from "@/ai/schemas/leaderboard-commentary";
 
 gsap.registerPlugin(Flip);
@@ -20,24 +18,8 @@ const LEADERBOARD_API_URL = "/api/leaderboard";
 
 export function Leaderboard() {
   const [teams, setTeams] = useState<Team[]>([]);
-  const [commentary, setCommentary] = useState("AI commentator is warming up...");
-  const [isCommentaryLoading, setIsCommentaryLoading] = useState(true);
   const component = useRef<HTMLDivElement>(null);
   const list = useRef<HTMLUListElement>(null);
-
-  const updateCommentary = useCallback(async (currentTeams: Team[]) => {
-    if (currentTeams.length === 0) return;
-    setIsCommentaryLoading(true);
-    try {
-      const result = await generateLeaderboardCommentary({ teams: currentTeams });
-      setCommentary(result.commentary);
-    } catch (error) {
-      console.error("Error generating commentary:", error);
-      setCommentary("The commentator is currently offline.");
-    } finally {
-      setIsCommentaryLoading(false);
-    }
-  }, []);
 
   const fetchLeaderboard = useCallback(async () => {
     try {
@@ -60,12 +42,6 @@ export function Leaderboard() {
 
     return () => clearInterval(interval);
   }, [fetchLeaderboard]);
-
-  useEffect(() => {
-    if (teams.length > 0) {
-      updateCommentary(teams);
-    }
-  }, [teams, updateCommentary]);
 
   useLayoutEffect(() => {
     if (!list.current) return;
@@ -135,20 +111,6 @@ export function Leaderboard() {
                 </li>
             ))}
             </ul>
-        </div>
-        <div className="shrink-0 mt-4 p-4 rounded-lg bg-card/50 border border-border/50 flex items-start gap-3">
-          <Bot className="w-6 h-6 text-primary flex-shrink-0 mt-1" />
-          <div className="flex-grow">
-            <h2 className="font-headline text-base font-bold text-primary">AI Commentary</h2>
-            {isCommentaryLoading ? (
-              <div className="space-y-2 mt-1">
-                <div className="h-4 bg-muted/50 rounded w-3/4 animate-pulse"></div>
-                <div className="h-4 bg-muted/50 rounded w-1/2 animate-pulse"></div>
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground mt-1">{commentary}</p>
-            )}
-          </div>
         </div>
       </main>
     </div>
