@@ -11,13 +11,13 @@ import type { LeaderboardCommentaryInput } from "@/ai/schemas/leaderboard-commen
 
 gsap.registerPlugin(Flip);
 
-type Team = LeaderboardCommentaryInput['teams'][number];
+type Team = LeaderboardCommentaryInput['teams'][number] & { score_updated_at: string };
 
 const LEADERBOARD_API_URL = "/api/leaderboard";
 
-
 export function Leaderboard() {
   const [teams, setTeams] = useState<Team[]>([]);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const component = useRef<HTMLDivElement>(null);
   const list = useRef<HTMLUListElement>(null);
 
@@ -31,6 +31,7 @@ export function Leaderboard() {
       const sortedTeams = [...data].sort((a, b) => b.points - a.points);
       const rankedTeams = sortedTeams.map((t, i) => ({ ...t, rank: i + 1 }));
       setTeams(rankedTeams);
+      setLastUpdated(new Date());
     } catch (error) {
       console.error("Failed to fetch leaderboard data:", error);
     }
@@ -57,8 +58,7 @@ export function Leaderboard() {
         });
     }, component);
     return () => ctx.revert();
-}, [teams]);
-
+  }, [teams]);
 
   return (
     <div ref={component} className="flex flex-col h-full w-full bg-background text-foreground font-body p-4 md:p-6 lg:p-8 overflow-hidden">
@@ -67,7 +67,10 @@ export function Leaderboard() {
             <h1 className="font-headline text-2xl md:text-3xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-primary via-accent to-primary">
                 Leaderboard
             </h1>
-            <p className="text-muted-foreground mt-1 text-xs md:text-sm">Top 10 Teams - Zero Day Arena</p>
+            <p className="text-muted-foreground mt-1 text-xs md:text-sm">
+              Top 10 Teams - Zero Day Arena
+              {lastUpdated && ` | Last updated: ${lastUpdated.toLocaleTimeString()}`}
+            </p>
         </div>
         <Link href="/" passHref>
             <Button variant="outline" className="mt-4 sm:mt-0 rounded-full px-6">
