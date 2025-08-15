@@ -9,30 +9,24 @@ import Link from "next/link";
 import { Button } from "./ui/button";
 import { generateLeaderboardCommentary } from "@/ai/flows/leaderboard-commentary-flow";
 import { Bot } from "lucide-react";
+import type { LeaderboardCommentaryInput } from "@/ai/schemas/leaderboard-commentary";
 
 gsap.registerPlugin(Flip);
 
-const initialTeams = [
-  { name: "Cyber-Punishers", rank: 1, points: 9850 },
-  { name: "Digital-Dragons", rank: 2, points: 9700 },
-  { name: "Fatal-Bytes", rank: 3, points: 9600 },
-  { name: "Ghost-Protocol", rank: 4, points: 9450 },
-  { name: "Shadow-Hackers", rank: 5, points: 9300 },
-  { name: "Team-Solaris", rank: 6, points: 9150 },
-  { name: "Cyber-Ninjas", rank: 7, points: 9000 },
-  { name: "Void-Strikers", rank: 8, points: 8850 },
-  { name: "Binary-Bandits", rank: 9, points: 8700 },
-  { name: "Code-Crusaders", rank: 10, points: 8550 },
-];
+type Team = LeaderboardCommentaryInput['teams'][number];
+
+const LEADERBOARD_API_URL = "https://pfswt.zerodayarena.com/api/leaderboard";
+
 
 export function Leaderboard() {
-  const [teams, setTeams] = useState(initialTeams);
+  const [teams, setTeams] = useState<Team[]>([]);
   const [commentary, setCommentary] = useState("AI commentator is warming up...");
   const [isCommentaryLoading, setIsCommentaryLoading] = useState(true);
   const component = useRef<HTMLDivElement>(null);
   const list = useRef<HTMLUListElement>(null);
 
-  const updateCommentary = useCallback(async (currentTeams: typeof initialTeams) => {
+  const updateCommentary = useCallback(async (currentTeams: Team[]) => {
+    if (currentTeams.length === 0) return;
     setIsCommentaryLoading(true);
     try {
       const result = await generateLeaderboardCommentary({ teams: currentTeams });
@@ -45,22 +39,32 @@ export function Leaderboard() {
     }
   }, []);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const newTeams = teams.map((team) => ({
-        ...team,
-        points: team.points + Math.floor(Math.random() * 251) - 50,
-      }));
-      const sortedTeams = [...newTeams].sort((a, b) => b.points - a.points);
+  const fetchLeaderboard = useCallback(async () => {
+    try {
+      const response = await fetch(LEADERBOARD_API_URL);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data: Team[] = await response.json();
+      const sortedTeams = [...data].sort((a, b) => b.points - a.points);
       const rankedTeams = sortedTeams.map((t, i) => ({ ...t, rank: i + 1 }));
       setTeams(rankedTeams);
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, [teams]);
+    } catch (error) {
+      console.error("Failed to fetch leaderboard data:", error);
+    }
+  }, []);
 
   useEffect(() => {
-    updateCommentary(teams);
+    fetchLeaderboard();
+    const interval = setInterval(fetchLeaderboard, 5000); // Fetch every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [fetchLeaderboard]);
+
+  useEffect(() => {
+    if (teams.length > 0) {
+      updateCommentary(teams);
+    }
   }, [teams, updateCommentary]);
 
   useLayoutEffect(() => {
@@ -99,6 +103,11 @@ export function Leaderboard() {
       <main className="flex-grow flex flex-col overflow-hidden max-w-4xl w-full mx-auto">
         <div className="flex-grow bg-card/50 rounded-lg border border-border/50 overflow-y-auto">
             <ul ref={list} className="p-1 space-y-1">
+            {teams.length === 0 && (
+              <li className="flex items-center justify-center p-4 text-muted-foreground">
+                Loading leaderboard...
+              </li>
+            )}
             {teams.map((team) => (
                 <li
                     key={team.name}
